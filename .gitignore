@@ -1,3 +1,14 @@
 *.suo
 *.pdb
-desking/bin/WebGrease.dll
+desking/bin
+desking/obj
+DBRepository/bin
+DBRepository/obj
+DomainModels/bin
+DomainModels/obj
+Utility/bin
+Utility/obj
+ViewModels/bin
+ViewModels/obj
+*.user
+desking/node_modules
