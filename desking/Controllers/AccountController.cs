@@ -9,7 +9,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using desking.Models;
-
+using Newtonsoft.Json;
+using Utility;
+using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using desking.DomainModels;
 namespace desking.Controllers
 {
     [Authorize]
@@ -73,7 +77,7 @@ namespace desking.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: true);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -150,10 +154,20 @@ namespace desking.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<string> Register(string data)
         {
-            if (ModelState.IsValid)
+            RegisterViewModel model = JsonConvert.DeserializeObject<RegisterViewModel>(data);
+            model.Password = Crypto.OpenSSLDecrypt(model.Password, "beta");
+            ICollection<ValidationResult> results;
+            if (!isValid(model, out results))
             {
+                //foreach (var validationResult in results)
+                //{
+                return results.FirstOrDefault().ErrorMessage;
+                //}
+            }
+            var user = new ApplicationUser { FullName = model.UserName, UserName = model.Email, Email = model.Email, LockoutEnabled = true, TwoFactorEnabled = true, PhoneNumber = model.PhoneNumber };
+
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -172,13 +186,12 @@ namespace desking.Controllers
                     //else
                     //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    //return RedirectToAction("Index", "Home");
                 }
-                AddErrors(result);
-            }
+                //AddErrors(result);
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            return  result.Errors.FirstOrDefault();
         }
 
         //
@@ -207,27 +220,22 @@ namespace desking.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        public async Task<string> ForgotPassword(string email)
         {
-            if (ModelState.IsValid)
+            string msg = "Please check your email!";
+            var user = await UserManager.FindByNameAsync(email);
+            if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
-                {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
-                }
-
-                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                // Don't reveal that the user does not exist or is not confirmed
+                msg = "user doesn't exist!";
             }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
+            else
+            {
+                var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+            }
+            return msg;
         }
 
         //

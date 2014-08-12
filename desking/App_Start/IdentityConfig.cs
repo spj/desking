@@ -11,6 +11,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using desking.Models;
+using System.Net.Configuration;
+using System.Configuration;
 
 namespace desking
 {
@@ -19,7 +21,39 @@ namespace desking
         public Task SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            SmtpSection section = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
+
+            string from = section.From;
+            string host = section.Network.Host;
+            int port = section.Network.Port;
+            bool enableSsl = section.Network.EnableSsl;
+            string user = section.Network.UserName;
+            string password = section.Network.Password;
+
+            // Configure the client:
+            System.Net.Mail.SmtpClient client =
+                new System.Net.Mail.SmtpClient(host);
+
+            client.Port = port;
+            client.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+
+            // Creatte the credentials:
+            System.Net.NetworkCredential credentials =
+                new System.Net.NetworkCredential(user, password);
+
+            client.EnableSsl = enableSsl;
+            client.Credentials = credentials;
+
+            // Create the message:
+            var mail =
+                new System.Net.Mail.MailMessage(from, message.Destination);
+
+            mail.Subject = message.Subject;
+            mail.Body = message.Body;
+            mail.IsBodyHtml = true;
+            // Send:
+            return client.SendMailAsync(mail);
         }
     }
 

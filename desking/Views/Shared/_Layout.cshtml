@@ -1,14 +1,18 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@using Microsoft.AspNet.Identity
+<!DOCTYPE html>
+<html ng-app="betaApp">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>Desk It</title>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    @*<link rel="stylesheet" href="~/Content/css/bootstrap.css">*@
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
-
 </head>
-<body>
+<body ng-controller="rootCtrl">
+    <div class='notifications bottom-right'>
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+    </div>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -17,28 +21,100 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @if (Request.IsAuthenticated)
+                {
+                    if (!User.IsInRole("Admin"))
+                    {
+                        <a class="navbar-brand" ui-sref="home">Home</a>
+                    }
+                    @*@Html.ActionLink("Home", "Home", "Home",null, new { @class = "navbar-brand" })*@
+                }
+                else
+                {
+                    @*@Html.ActionLink("Application name", "Index", "Home", null, new { @class = "navbar-brand" })*@
+                    <a class="navbar-brand" ui-sref="index">Home</a>                      
+                }
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
+                @if (Request.IsAuthenticated)
+                {
+                    <ul class="nav navbar-nav">
+                        @if (User.IsInRole("Admin"))
+                        {                            
+                            <li><a ui-sref="roles">Roles</a></li>
+                        }
+                        else
+                        {
+                            @*<li>@Html.ActionLink("UsersAdmin", "Index", "UsersAdmin")</li>*@
+                            if (User.IsInRole("UserAdmin"))
+                            {
+                                <li><a ui-sref="users">Users</a></li>
+                            }
+                        }
+                    </ul>
+                    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <ul class="nav navbar-nav navbar-right" ng-controller="accountCtrl">
+                        @if (!User.IsInRole("Admin"))
+                        {
+                            <li class="dropdown" is-open="status.isopen">
+                                <a href="#" class="btn dropdown-toggle">
+                                    <span>{{data.dealer.Name}}</span>
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li role="presentation" ng-repeat="dealer in data.dealers">
+                                        <a role="menuitem" tabindex="-1" href="#" ng-click="change(dealer)">{{dealer.Name}}</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                @*@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*@
+                                @*<a href="#">Hello @User.Identity.GetUserName()!</a>*@
+                                <a>{{ data.fullname}}</a>
+                            </li>
+                        }
+                        <li><a href="javascript:sessionStorage.clear();document.getElementById('logoutForm').submit()">Log off</a></li>
+                    </ul>
+                    }
+                }
+                else
+                {
+                    <ul id="login" class="nav navbar-nav navbar-right">
+                        @*<li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>*@
+                        <li><a ui-sref="register">Register</a></li>
+                        <li><a ui-sref="login">Log in</a></li>
+                    </ul>
+                }
             </div>
         </div>
     </div>
     <div class="container body-content">
-        @RenderBody()
+        <main id="main" ui-view>
+            @RenderBody()
+        </main>
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Dear Corp.</p>
         </footer>
     </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.min.js"></script>
+    @*<script src="~/Scripts/jquery.min.js"></script>*@
+    @*<script src="~/Scripts/angular.js"></script>*@
+    <script>
+        var beta = { global: {} }
+        beta.global.webroot = '@Url.Content("~")';
+        beta.global.isAuthenticated = '@Request.IsAuthenticated' == 'True'
+        if (beta.global.isAuthenticated)
+            beta.global.currentuser = { email: '@User.Identity.GetUserName()' };
+        else
+            beta.global.currentuser = null;
+    </script>
+    @Scripts.Render("~/bundles/beta")
     @RenderSection("scripts", required: false)
+    @Html.PageScripts()
 </body>
 </html>

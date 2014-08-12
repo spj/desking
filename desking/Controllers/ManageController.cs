@@ -11,7 +11,7 @@ using desking.Models;
 namespace desking.Controllers
 {
     [Authorize]
-    public class ManageController : Controller
+    public class ManageController : SessionlessController
     {
         public ManageController()
         {
