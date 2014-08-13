@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace beta.Controllers
+namespace desking.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class AdminController : SessionlessController

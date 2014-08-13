@@ -26,14 +26,14 @@ namespace desking
             //bundles.Add(new StyleBundle("~/Content/css").Include(
             //          "~/Content/bootstrap.css",
             //          "~/Content/site.css"));
-            bundles.Add(new ScriptBundle("~/bundles/beta").Include("~/Scripts/common/*.js"));
-            bundles.Add(new ScriptBundle("~/bundles/beta.account").Include(
+            bundles.Add(new ScriptBundle("~/bundles/desking").Include("~/Scripts/common/*.js"));
+            bundles.Add(new ScriptBundle("~/bundles/desking.account").Include(
       "~/Scripts/bz.account.js"));
-            bundles.Add(new ScriptBundle("~/bundles/beta.register").Include(
+            bundles.Add(new ScriptBundle("~/bundles/desking.register").Include(
      "~/Scripts/bz.register.js"));
-            bundles.Add(new ScriptBundle("~/bundles/beta.usersAdmin").Include(
+            bundles.Add(new ScriptBundle("~/bundles/desking.usersAdmin").Include(
 "~/Scripts/bz.usersAdmin.js"));
-            bundles.Add(new ScriptBundle("~/bundles/beta.sendVerifyCode").Include(
+            bundles.Add(new ScriptBundle("~/bundles/desking.sendVerifyCode").Include(
       "~/Scripts/bz.sendVerifyCode.js"));
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/css/common/*.css"));

@@ -7,7 +7,7 @@
     <ProjectGuid>{C643642E-66B9-47AB-9F30-EEB7112188DE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>beta.ViewModels</RootNamespace>
+    <RootNamespace>desking.ViewModels</RootNamespace>
     <AssemblyName>ViewModels</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

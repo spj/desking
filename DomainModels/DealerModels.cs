@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace beta.DomainModels
+namespace desking.DomainModels
 {
     public class DealerModel
     {

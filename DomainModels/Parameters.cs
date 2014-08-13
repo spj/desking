@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace beta.DomainModels
+namespace desking.DomainModels
 {
     public static class Parameters
     {

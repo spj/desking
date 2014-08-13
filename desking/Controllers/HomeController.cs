@@ -8,6 +8,12 @@ namespace desking.Controllers
 {
     public class HomeController : Controller
     {
+        [Authorize]
+        public ActionResult Home(string id)
+        {
+
+            return View();
+        }
         public ActionResult Index()
         {
             return View();

@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNet.Identity
 <!DOCTYPE html>
-<html ng-app="betaApp">
+<html ng-app="deskingApp">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -105,15 +105,15 @@
     @*<script src="~/Scripts/jquery.min.js"></script>*@
     @*<script src="~/Scripts/angular.js"></script>*@
     <script>
-        var beta = { global: {} }
-        beta.global.webroot = '@Url.Content("~")';
-        beta.global.isAuthenticated = '@Request.IsAuthenticated' == 'True'
-        if (beta.global.isAuthenticated)
-            beta.global.currentuser = { email: '@User.Identity.GetUserName()' };
+        var desking = { global: {} }
+        desking.global.webroot = '@Url.Content("~")';
+        desking.global.isAuthenticated = '@Request.IsAuthenticated' == 'True'
+        if (desking.global.isAuthenticated)
+            desking.global.currentuser = { email: '@User.Identity.GetUserName()' };
         else
-            beta.global.currentuser = null;
+            desking.global.currentuser = null;
     </script>
-    @Scripts.Render("~/bundles/beta")
+    @Scripts.Render("~/bundles/desking")
     @RenderSection("scripts", required: false)
     @Html.PageScripts()
 </body>

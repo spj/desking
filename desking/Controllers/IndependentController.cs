@@ -1,14 +1,14 @@
-﻿using beta.ViewModels;
+﻿using desking.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using beta.Models;
+using desking.Models;
 using System.Threading.Tasks;
-using beta.DomainModels;
+using desking.DomainModels;
 
-namespace beta.Controllers
+namespace desking.Controllers
 {
     public class IndependentController : SessionlessController
     {

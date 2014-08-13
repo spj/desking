@@ -7,7 +7,7 @@
     <ProjectGuid>{04F6E70E-1843-440A-88E2-2A708B1F7CBF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>beta.DomainModels</RootNamespace>
+    <RootNamespace>desking.DomainModels</RootNamespace>
     <AssemblyName>DomainModels</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

@@ -1,11 +1,11 @@
-﻿using beta.DomainModels;
+﻿using desking.DomainModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace beta.ViewModels
+namespace desking.ViewModels
 {
     public class DealerUserViewModel:DealerUserModel
     {

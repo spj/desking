@@ -1,4 +1,4 @@
-﻿using beta.Models;
+﻿using desking.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -10,10 +10,10 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using beta.ViewModels;
-using beta.DomainModels;
+using desking.ViewModels;
+using desking.DomainModels;
 
-namespace beta.Controllers
+namespace desking.Controllers
 {
     [Authorize(Roles = "UserAdmin")]    
     public class UsersAdminController : SessionlessController
@@ -28,7 +28,6 @@ namespace beta.Controllers
         public JsonResult GetUserDealersAndRoles(string user)
         {
             var _data = new UserDealersAndRoles(user);
-            var _roles = _data.Roles;
             var _dealers = _data.Dealers;
            var _dealerExts = (from d in CacheData.GetDealers()
                            join i in _dealers on d.DealerID equals i
@@ -37,7 +36,7 @@ namespace beta.Controllers
                                DealerID = d.DealerID,
                                Name = d.Name,
                            }).ToList();
-           return Json(new { roles=_roles, dealers=_dealerExts}, JsonRequestBehavior.AllowGet);
+           return Json(new { user = _data.User, roles = _data.Roles, dealers = _dealerExts }, JsonRequestBehavior.AllowGet);
         }
 
         [Route("GetRoles")]
@@ -129,7 +128,7 @@ namespace beta.Controllers
                 {
                     if (selectedRoles != null)
                     {
-                        var result = await UserManager.AddUserToRolesAsync(user.Id, selectedRoles);
+                        var result = await UserManager.AddToRolesAsync(user.Id, selectedRoles);
                         if (!result.Succeeded)
                         {
                             ModelState.AddModelError("", result.Errors.First());
@@ -201,14 +200,14 @@ namespace beta.Controllers
 
                 selectedRole = selectedRole ?? new string[] { };
 
-                var result = await UserManager.AddUserToRolesAsync(user.Id, selectedRole.Except(userRoles).ToList<string>());
+                var result = await UserManager.AddToRolesAsync(user.Id, selectedRole.Except(userRoles).ToArray());
 
                 if (!result.Succeeded)
                 {
                     ModelState.AddModelError("", result.Errors.First());
                     return View();
                 }
-                result = await UserManager.RemoveUserFromRolesAsync(user.Id, userRoles.Except(selectedRole).ToList<string>());
+                result = await UserManager.RemoveFromRolesAsync(user.Id, userRoles.Except(selectedRole).ToArray());
 
                 if (!result.Succeeded)
                 {

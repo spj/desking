@@ -7,16 +7,16 @@
     $scope.$on("dealerChanged", function (event, args) {
         $scope.getusers(args.dealer.DealerID);
     });
-    $scope.getusers(beta.global.currentuser.dealer.DealerID);
+    $scope.getusers(desking.global.currentuser.dealer.DealerID);
 }
 
-function userCtrl($scope, $http, userService, uid) {
+function userCtrl($scope, $http, userService, $state, uid) {
     $scope.orig = {};
-    if (beta.global.roles)
-        $scope.roles = beta.global.roles;
+    if (desking.global.roles)
+        $scope.roles = desking.global.roles;
     else{
         userService.getRoles().then(function (roles) {
-            beta.global.roles = roles;
+            desking.global.roles = roles;
             $scope.roles = roles;
         });
     }
@@ -137,7 +137,7 @@ function userCtrl($scope, $http, userService, uid) {
                 sqlcmd += ";" + _insertdealercmd;
         }
 
-        $.post(String.format("{0}ExecuteNonQuery", beta.global.webroot), { cmdText: AESencrypt(sqlcmd), cmdParameter: angular.toJson(sqlparameter) }).done(function (data) {
+        $.post(String.format("{0}ExecuteNonQuery", desking.global.webroot), { cmdText: AESencrypt(sqlcmd), cmdParameter: angular.toJson(sqlparameter) }).done(function (data) {
         }).fail(function (xhr, status, error) {
             $scope.notify("danger", xhr.responseText);
         });
@@ -148,7 +148,9 @@ function userCtrl($scope, $http, userService, uid) {
     $scope.pristine = function () {
         return angular.equals(this.orig, this.data);
     };
-
+    $scope.$on("dealerChanged", function (event, args) {
+        $state.go("users");
+    });
     $scope.reset();
 }
 

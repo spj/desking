@@ -1,4 +1,4 @@
-﻿using beta.Models;
+﻿using desking.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -9,7 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Collections.Generic;
 
-namespace beta.Controllers
+namespace desking.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class RolesAdminController : SessionlessController

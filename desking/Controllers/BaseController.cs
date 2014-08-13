@@ -1,5 +1,5 @@
-﻿using beta.Controllers.Helper;
-using beta.DomainModels;
+﻿using desking.Controllers.Helper;
+using desking.DomainModels;
 using Newtonsoft.Json.Linq;
 using NLog;
 using System;
@@ -12,7 +12,7 @@ using System.Web;
 using System.Web.Mvc;
 using Utility;
 
-namespace beta.Controllers
+namespace desking.Controllers
 {
      [ClientErrorHandler]
     public class BaseController : Controller

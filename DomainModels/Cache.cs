@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Utilities;
 
-namespace beta.DomainModels
+namespace desking.DomainModels
 {
     public class CacheModel
     {

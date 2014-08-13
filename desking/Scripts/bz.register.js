@@ -8,8 +8,11 @@
     };
     $scope.submit = function () {
         this.data.password = AESencrypt(this.data.clearPassword);
-        $.post(String.format("{0}Account/Register", beta.global.webroot), { data: submitData( this.data, this.submitData) }).done(function (data) {
-            $scope.notify('success', "please activate your account via your email");
+        $.post(String.format("{0}Account/Register", desking.global.webroot), { data: submitData( this.data, this.submitData) }).done(function (data) {
+            if (data)
+                $scope.notify('danger', data);
+            else
+                window.location = String.format("{0}", desking.global.webroot);
         });
     };
     $scope.reset = function () {

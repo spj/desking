@@ -5,7 +5,7 @@ using System.Net.Mime;
 using System.Web;
 using System.Web.Mvc;
 
-namespace beta.Controllers.Helper
+namespace desking.Controllers.Helper
 {
     /// <summary>
     /// decorate a controller or an action:[LayoutInjecter("_PublicLayout")]

@@ -141,6 +141,6 @@ function getAddressInfoByZip(zip) {
     }).promise();
 }
 function AESencrypt(content){
-  return  CryptoJS.AES.encrypt(content, "beta").toString();
+  return  CryptoJS.AES.encrypt(content, "desking").toString();
 }
 

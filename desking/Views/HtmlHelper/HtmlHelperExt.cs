@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace beta.Views.HtmlHelperExt
+namespace desking.Views.HtmlHelperExt
 {
     public static class HtmlHelperExt
     {

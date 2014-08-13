@@ -17,7 +17,7 @@ using desking.DomainModels;
 namespace desking.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : SessionlessController
     {
         private ApplicationUserManager _userManager;
 
@@ -154,10 +154,11 @@ namespace desking.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
         public async Task<string> Register(string data)
         {
             RegisterViewModel model = JsonConvert.DeserializeObject<RegisterViewModel>(data);
-            model.Password = Crypto.OpenSSLDecrypt(model.Password, "beta");
+            model.Password = Crypto.OpenSSLDecrypt(model.Password, "desking");
             ICollection<ValidationResult> results;
             if (!isValid(model, out results))
             {
@@ -166,12 +167,11 @@ namespace desking.Controllers
                 return results.FirstOrDefault().ErrorMessage;
                 //}
             }
-            var user = new ApplicationUser { FullName = model.UserName, UserName = model.Email, Email = model.Email, LockoutEnabled = true, TwoFactorEnabled = true, PhoneNumber = model.PhoneNumber };
-
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser { FullName = model.UserName, UserName = model.Email, Email = model.Email, LockoutEnabled = true, PhoneNumber = model.PhoneNumber };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    new Account().Register(user.Id, model.Dealer);
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
@@ -186,12 +186,13 @@ namespace desking.Controllers
                     //else
                     //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    //return RedirectToAction("Index", "Home");
+                    //return RedirectToAction("Home", "Home");
+                    return string.Empty;
                 }
                 //AddErrors(result);
 
             // If we got this far, something failed, redisplay form
-            return  result.Errors.FirstOrDefault();
+            return result.Errors.FirstOrDefault();
         }
 
         //

@@ -1,8 +1,8 @@
 ﻿$.ajaxSetup({ cache: true })
-var betaApp = angular.module('betaApp', ['ui.router', 'ui.bootstrap', 'ui.mask', 'bz.Directives'])
+var deskingApp = angular.module('deskingApp', ['ui.router', 'ui.bootstrap', 'ui.mask', 'bz.Directives'])
 .config(function ($stateProvider, $urlRouterProvider) {
     // For any unmatched url, redirect to /state1
-   // $urlRouterProvider.otherwise(beta.global.isAuthenticated ? "/home" : "/index");
+   // $urlRouterProvider.otherwise(desking.global.isAuthenticated ? "/home" : "/index");
     //$urlRouterProvider.otherwise(function ($injector, $location) {
     //    return '/partials/contacts.' + '.html';
     //});
@@ -10,44 +10,44 @@ var betaApp = angular.module('betaApp', ['ui.router', 'ui.bootstrap', 'ui.mask',
     $stateProvider
       .state('index', {
           url: "/index",
-          templateUrl: String.format("{0}{1}/GetView/{2}", beta.global.webroot, "Home", "Index")
+          templateUrl: String.format("{0}{1}/GetView/{2}", desking.global.webroot, "Home", "Index")
       })
       .state('home', {
           url: "^/home",
-          templateUrl: String.format("{0}{1}/GetView/{2}", beta.global.webroot, "Home", "Home")
+          templateUrl: String.format("{0}{1}/GetView/{2}", desking.global.webroot, "Home", "Home")
       })
       .state('register', {
           url: "^/register",
-          templateUrl: String.format("{0}{1}/GetView/{2}", beta.global.webroot, 'Account', 'Register'),
+          templateUrl: String.format("{0}{1}/GetView/{2}", desking.global.webroot, 'Account', 'Register'),
           controller: function ($scope, $http, userService) {
               registerCtrl.call(this, $scope, $http, userService);
           }
       })
       .state('login', {
           url: "^/login",
-          templateUrl: String.format("{0}{1}/GetView/{2}", beta.global.webroot, 'Account', 'Login'),
+          templateUrl: String.format("{0}{1}/GetView/{2}", desking.global.webroot, 'Account', 'Login'),
       })
       .state('roles', {
           url: "^/roles",
-          templateUrl: String.format("{0}{1}/GetView/{2}", beta.global.webroot, 'RolesAdmin', 'Index'),
+          templateUrl: String.format("{0}{1}/GetView/{2}", desking.global.webroot, 'RolesAdmin', 'Index'),
       })
     .state('users', {
         url: "/users",
-        templateUrl: String.format("{0}{1}/GetView/{2}", beta.global.webroot, 'UsersAdmin', 'List'),
+        templateUrl: String.format("{0}{1}/GetView/{2}", desking.global.webroot, 'UsersAdmin', 'List'),
         controller: function ($scope, userService) {
             usersCtrl.call(this, $scope, userService);
         }
     })
     .state('user', {
         url: "/user/:uid",
-        templateUrl: String.format("{0}{1}/GetView/{2}", beta.global.webroot, 'UsersAdmin', 'Details'),
-        controller: function ($scope, $http, $stateParams, userService) {
-            userCtrl.call(this, $scope, $http, userService, $stateParams.uid);
+        templateUrl: String.format("{0}{1}/GetView/{2}", desking.global.webroot, 'UsersAdmin', 'Details'),
+        controller: function ($scope, $http, $stateParams, userService, $state) {
+            userCtrl.call(this, $scope, $http, userService,$state, $stateParams.uid);
         }
     }).
     state('forgetPassword', {
         url: "/forgetPassword",
-        templateUrl: String.format("{0}{1}/GetView/{2}", beta.global.webroot, 'Account', 'ForgotPassword'),
+        templateUrl: String.format("{0}{1}/GetView/{2}", desking.global.webroot, 'Account', 'ForgotPassword'),
         controler: function ($scope) {
             pwdCtrl.call(this, $scope);
         }
@@ -80,11 +80,11 @@ var betaApp = angular.module('betaApp', ['ui.router', 'ui.bootstrap', 'ui.mask',
 })
 .controller("accountCtrl", function ($scope, $http, $rootScope) {
     $scope.getDealers = function (user) {
-        $.getJSON(String.format("{0}Independent/GetUserDealers", beta.global.webroot), { user: user }).done(function (data) {
+        $.getJSON(String.format("{0}Independent/GetUserDealers", desking.global.webroot), { user: user }).done(function (data) {
             $scope.$apply(function () {           
                 $scope.data = { email: user, fullname: data.UserFullName, dealer: data.Dealers[0], dealers: data.Dealers };
             });
-            beta.global.currentuser = $scope.data;
+            desking.global.currentuser = $scope.data;
         })
     };
     $scope.status = {
@@ -96,16 +96,16 @@ var betaApp = angular.module('betaApp', ['ui.router', 'ui.bootstrap', 'ui.mask',
         $rootScope.$broadcast("dealerChanged", {
             dealer:dealer
         });
-        beta.global.currentuser.dealer = dealer;
+        desking.global.currentuser.dealer = dealer;
     }
-    $scope.getDealers(beta.global.currentuser.email);
+    $scope.getDealers(desking.global.currentuser.email);
    
-        //$scope.$watch('beta.global.currentuser.email', function (newvalue, oldvalue) {
+        //$scope.$watch('desking.global.currentuser.email', function (newvalue, oldvalue) {
 
         //});
 });
 
-betaApp.service('userService', function ($http, $q) {
+deskingApp.service('userService', function ($http, $q) {
     return ({
         getRoles: getRoles,
         getUserDealersAndRoles: getUserDealersAndRoles,
@@ -115,7 +115,7 @@ betaApp.service('userService', function ($http, $q) {
     function getDealerUsers(dealer) {
         var request = $http({
             method: "get",
-            url: String.format("{0}GetDealerUsers/{1}",beta.global.webroot, dealer),
+            url: String.format("{0}GetDealerUsers/{1}",desking.global.webroot, dealer),
             params: {
                 action: "get"
             }
@@ -126,7 +126,7 @@ betaApp.service('userService', function ($http, $q) {
     function getRoles() {
         var request = $http({
             method: "get",
-            url: String.format("{0}GetRoles", beta.global.webroot),
+            url: String.format("{0}GetRoles", desking.global.webroot),
             params: {
                 action: "get"
             }
@@ -137,7 +137,7 @@ betaApp.service('userService', function ($http, $q) {
     function getUserDealersAndRoles(uid) {
         var request = $http({
             method: "get",
-            url: String.format("{0}GetUserDealersAndRoles/{1}", beta.global.webroot, uid),
+            url: String.format("{0}GetUserDealersAndRoles/{1}", desking.global.webroot, uid),
             params: {
                 action: "get"
             }
@@ -148,7 +148,7 @@ betaApp.service('userService', function ($http, $q) {
     function getDealers(dealer) {
         var request = $http({
             method: "get",
-            url: String.format("{0}Dealers/{1}", beta.global.webroot, dealer),
+            url: String.format("{0}Dealers/{1}", desking.global.webroot, dealer),
             params: {
                 action: "get"
             }
