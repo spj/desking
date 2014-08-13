@@ -23,10 +23,7 @@
                 </button>
                 @if (Request.IsAuthenticated)
                 {
-                    if (!User.IsInRole("Admin"))
-                    {
-                        <a class="navbar-brand" ui-sref="home">Home</a>
-                    }
+                   <a class="navbar-brand" ui-sref="home">Home</a>
                     @*@Html.ActionLink("Home", "Home", "Home",null, new { @class = "navbar-brand" })*@
                 }
                 else
@@ -39,25 +36,24 @@
                 @if (Request.IsAuthenticated)
                 {
                     <ul class="nav navbar-nav">
-                        @if (User.IsInRole("Admin"))
-                        {                            
-                            <li><a ui-sref="roles">Roles</a></li>
-                        }
-                        else
-                        {
                             @*<li>@Html.ActionLink("UsersAdmin", "Index", "UsersAdmin")</li>*@
-                            if (User.IsInRole("UserAdmin"))
+                            @if (User.IsInRole("Support") || User.IsInRole("UserAdmin"))
                             {
                                 <li><a ui-sref="users">Users</a></li>
                             }
-                        }
                     </ul>
                     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
                     {
                         @Html.AntiForgeryToken()
 
                         <ul class="nav navbar-nav navbar-right" ng-controller="accountCtrl">
-                        @if (!User.IsInRole("Admin"))
+                        @if (User.IsInRole("Support"))
+                        {
+                            <li>
+                                <input name="dealer" type="text" ng-model="data.dealer" typeahead="dealer.Name for dealer in getDealers($viewValue)" typeahead-min-length="3" typeahead-editable="false" typeahead-on-select="change($item, $model, $label)" class="form-control" autocomplete="off" />                      
+                            </li>
+                        }
+                        else
                         {
                             <li class="dropdown" is-open="status.isopen">
                                 <a href="#" class="btn dropdown-toggle">
@@ -70,12 +66,12 @@
                                     </li>
                                 </ul>
                             </li>
+                        }
                             <li>
                                 @*@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*@
                                 @*<a href="#">Hello @User.Identity.GetUserName()!</a>*@
                                 <a>{{ data.fullname}}</a>
                             </li>
-                        }
                         <li><a href="javascript:sessionStorage.clear();document.getElementById('logoutForm').submit()">Log off</a></li>
                     </ul>
                     }
@@ -109,7 +105,7 @@
         desking.global.webroot = '@Url.Content("~")';
         desking.global.isAuthenticated = '@Request.IsAuthenticated' == 'True'
         if (desking.global.isAuthenticated)
-            desking.global.currentuser = { email: '@User.Identity.GetUserName()' };
+            desking.global.currentuser = { email: '@User.Identity.GetUserName()', isSupport: '@User.IsInRole("Support")'=='True' };
         else
             desking.global.currentuser = null;
     </script>

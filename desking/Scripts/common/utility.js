@@ -65,43 +65,6 @@ function submitData(model, properties) {
     return angular.toJson(_obj);
 }
 
-function getTypeAheadFromJson(data, property) {
-    if (property)
-        return $.map(data, function (n, i) {
-            return n[property];
-        });
-    else
-        return data;
-}
-function bindingAndHistoryTemplate(options, isnew) {
-    var model = null;
-    if (options.modelName) {
-        model = new window[options.modelName]();
-        model.errors = ko.validation.group(model).watch(false);
-        if (sessionStorage.getItem(options.modelName)){
-            var _modelData = ko.mapping.fromJSON(sessionStorage.getItem(options.modelName));
-            $.extend(model, _modelData);
-        }
-        ko.applyBindings(model, $('#' + options.elementID)[0]);
-    }
-    if (isnew) {
-        History.pushState({ idx: History.getCurrentIndex(), options: options }, null, options.historyUrl);
-        if (options.modelName) {
-            sessionStorage.setItem(options.modelName, ko.mapping.toJSON(model));
-        }
-    }
-    return model;
-}
-
-function updateHitoryState(idx) {
-    idx = idx || History.getCurrentIndex();
-    var state = History.getStateByIndex(idx);
-    var data = state.data;
-    if (hasNoValue(data) || data && hasNoValue(data.options.modelName) || $('#' + data.options.elementID).length==0) return;
-    var model = ko.dataFor($('#' + data.options.elementID)[0]);
-    sessionStorage.setItem(data.options.modelName, ko.mapping.toJSON(model));
-}
-
 function getAddressInfoByZip(zip) {
     return $.Deferred(function (deferred) {
         var addr = {};

@@ -78,27 +78,30 @@ var deskingApp = angular.module('deskingApp', ['ui.router', 'ui.bootstrap', 'ui.
         });
     };
 })
-.controller("accountCtrl", function ($scope, $http, $rootScope) {
-    $scope.getDealers = function (user) {
+.controller("accountCtrl", function ($scope, $http, $rootScope, userService) {
+    $scope.getMyDealers = function (user) {
         $.getJSON(String.format("{0}Independent/GetUserDealers", desking.global.webroot), { user: user }).done(function (data) {
             $scope.$apply(function () {           
                 $scope.data = { email: user, fullname: data.UserFullName, dealer: data.Dealers[0], dealers: data.Dealers };
             });
-            desking.global.currentuser = $scope.data;
+            $.extend(desking.global.currentuser, $scope.data);
         })
     };
     $scope.status = {
         isopen: false
     };
-    $scope.change = function (dealer) {
+    $scope.change = function (dealer, $model,$label) {
         this.data.dealer = dealer;
         this.status.isopen = false;
         $rootScope.$broadcast("dealerChanged", {
-            dealer:dealer
+            dealer: dealer
         });
         desking.global.currentuser.dealer = dealer;
-    }
-    $scope.getDealers(desking.global.currentuser.email);
+    };
+    $scope.getDealers = function (dealer) {
+        return userService.getDealers(dealer);
+    };
+    $scope.getMyDealers(desking.global.currentuser.email);
    
         //$scope.$watch('desking.global.currentuser.email', function (newvalue, oldvalue) {
 
