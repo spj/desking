@@ -1,6 +1,10 @@
 ﻿$.ajaxSetup({ cache: true })
 var deskingApp = angular.module('deskingApp', ['ui.router', 'ui.bootstrap', 'ui.mask', 'bz.Directives'])
-.config(function ($stateProvider, $urlRouterProvider) {
+.config(function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvider, $filterProvider, $provide) {
+    deskingApp.controllerProvider = $controllerProvider;
+    deskingApp.compileProvider = $compileProvider;
+    deskingApp.filterProvider = $filterProvider;
+    deskingApp.provide = $provide;
     // For any unmatched url, redirect to /state1
    // $urlRouterProvider.otherwise(desking.global.isAuthenticated ? "/home" : "/index");
     //$urlRouterProvider.otherwise(function ($injector, $location) {
