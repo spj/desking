@@ -12,7 +12,7 @@
         this.data.password = AESencrypt(this.data.clearPassword);
         $.post(String.format("{0}Account/Register", desking.global.webroot), { data: submitData( this.data, this.submitData) }).done(function (data) {
             if (data)
-                $scope.notify('danger', data);
+                $scope.notify({ content: data });
             else
                 window.location = String.format("{0}", desking.global.webroot);
         });

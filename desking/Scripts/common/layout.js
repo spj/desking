@@ -71,16 +71,11 @@ var deskingApp = angular.module('deskingApp', ['ui.router', 'mgcrea.ngStrap', 'u
 //        });
 //    });
 //})
-.controller("rootCtrl", function ($scope) {
-    $scope.alerts = [];
-    $scope.closeAlert = function (index) {
-        this.alerts.splice(index, 1);
-    };
-    $scope.notify =function (type, msg) {
-        this.$apply(function () {
-            $scope.alerts.push({ type: type, msg: msg });
-        });
-    };
+.controller("rootCtrl", function ($scope, $alert) {
+    $scope.notify = function (config) {
+        config = $.extend({type:"info",placement: 'top-right', show:true},config);
+        $alert(config);
+    }
 })
 .controller("accountCtrl", function ($scope, $http, $rootScope, userService,$q) {
     $scope.minLength = 4;

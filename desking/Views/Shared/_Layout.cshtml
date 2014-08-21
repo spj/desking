@@ -6,16 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Desk It</title>
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
-    @*<link rel="stylesheet" href="https://mgcrea.github.io/angular-strap/styles/angular-motion.min.css">
-    <link rel="stylesheet" href="https://mgcrea.github.io/angular-strap/styles/bootstrap-additions.min.css">*@
+    <link rel="stylesheet" href="https://mgcrea.github.io/angular-strap/styles/angular-motion.min.css">
+    <link rel="stylesheet" href="https://mgcrea.github.io/angular-strap/styles/bootstrap-additions.min.css">
 
     @*<link rel="stylesheet" href="~/Content/css/bootstrap.css">*@
     @Styles.Render("~/Content/css")
 </head>
 <body ng-controller="rootCtrl">
-    <div class='notifications bottom-right'>
+    @*<div class='notifications bottom-right'>
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-    </div>
+    </div>*@
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -95,6 +95,8 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.min.js"></script>
+    <script src="https://mgcrea.github.io/angular-strap/dist/angular-strap.min.js" data-semver="v2.0.5"></script>
+    <script src="https://mgcrea.github.io/angular-strap/dist/angular-strap.tpl.min.js" data-semver="v2.0.5"></script>
     @*<script src="~/Scripts/jquery.min.js"></script>*@
     @*<script src="~/Scripts/angular.js"></script>*@
     <script>

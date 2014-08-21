@@ -12,3 +12,7 @@ ViewModels/bin
 ViewModels/obj
 *.user
 desking/node_modules
+desking/Scripts/angular-strap.js
+desking/Scripts/angular-strap.min.js
+desking/Scripts/angular-strap.tpl.js
+desking/Scripts/angular-strap.tpl.min.js
