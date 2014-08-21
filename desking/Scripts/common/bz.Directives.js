@@ -27,11 +27,22 @@
     return {
         require: 'ngModel',
         link: function (scope, elm, attrs, ngModel) {
-            var _title = attrs.validationCheck||"";
-            elm.on("keyup", function () {
+            var _title = attrs.validationCheck || "";
+             //elm.on("change", function () {
+            //    var newvalue = ngModel.$viewValue;
+            scope.$watch(attrs.ngModel, function (newvalue) {
+                if (attrs["validationChecker"]) {
+                    var _err = scope[attrs["validationChecker"]](newvalue);
+                    if (_err) {
+                        _title = String.format("{0}\n{1}", _title, _err);
+                        ngModel.$setValidity(ngModel.$name, false);
+                    }
+                    else
+                        ngModel.$setValidity(ngModel.$name, true);
+                }
                 if (ngModel.$invalid) {
                     if (ngModel.$error.minlength) {
-                        _title = String.format("min length {0}",attrs.ngMinlength);
+                        _title = String.format("min length {0}", attrs.ngMinlength);
                     }
                     if (ngModel.$error.maxlength) {
                         if (_title)
@@ -40,30 +51,15 @@
                             _title = String.format("max length {0}", attrs.ngMaxlength);
                     }
                     if (!elm.attr("title")) {
-                        elm.attr("title",_title);
+                        elm.attr("title", _title);
                     }
                 }
                 else {
-                    if (attrs["validationChecker"]) {
-                        var _err = scope[attrs["validationChecker"]](ngModel.$viewValue);
-                        if (_err) {
-                            _title = String.format("{0}\n{1}", _title, _err);
-                            ngModel.$setValidity(ngModel.$name,false);
-                        }
-                    }
-                    if (ngModel.$invalid) {
-                        elm.attr("title", _title);
-                    }
-                    else {
-                        if (elm.attr("title")) {
-                            elm.removeAttr("title");
-                        }
+                    if (elm.attr("title")) {
+                        elm.removeAttr("title");
                     }
                 }
             });
-            //scope.$watch(attrs.ngModel, function (newValue, oldValue) {
-            //    console.log(ngModel);
-            //});
         }
     };
 });

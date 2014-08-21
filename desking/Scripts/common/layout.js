@@ -1,5 +1,5 @@
 ﻿$.ajaxSetup({ cache: true })
-var deskingApp = angular.module('deskingApp', ['ui.router', 'ui.bootstrap', 'ui.mask', 'bz.Directives'])
+var deskingApp = angular.module('deskingApp', ['ui.router', 'mgcrea.ngStrap', 'ui.mask', 'bz.Directives'])
 .config(function ($stateProvider, $urlRouterProvider, $controllerProvider, $compileProvider, $filterProvider, $provide) {
     deskingApp.controllerProvider = $controllerProvider;
     deskingApp.compileProvider = $compileProvider;
@@ -82,34 +82,44 @@ var deskingApp = angular.module('deskingApp', ['ui.router', 'ui.bootstrap', 'ui.
         });
     };
 })
-.controller("accountCtrl", function ($scope, $http, $rootScope, userService) {
+.controller("accountCtrl", function ($scope, $http, $rootScope, userService,$q) {
+    $scope.minLength = 4;
     $scope.getMyDealers = function (user) {
         $.getJSON(String.format("{0}Independent/GetUserDealers", desking.global.webroot), { user: user }).done(function (data) {
-            $scope.$apply(function () {           
+            $scope.$apply(function () {
                 $scope.data = { email: user, fullname: data.UserFullName, dealer: data.Dealers[0], dealers: data.Dealers };
+                $scope.selectedDealer = angular.copy($scope.data.dealer);
             });
-            $.extend(desking.global.currentuser, $scope.data);
+            $.extend(desking.global.currentuser,angular.copy( $scope.data));
         })
     };
-    $scope.status = {
-        isopen: false
-    };
-    $scope.change = function (dealer, $model,$label) {
-        this.data.dealer = dealer;
-        this.status.isopen = false;
+    $scope.dealerCheck = function (dealer) {
+        return angular.isUndefined(desking.global.currentuser.dealer) || _.some($scope.data.dealers, function (d) { return dealer == d.DealerID; }) ? null : "Invalid dealer";
+    }
+    function dealerChange(scope, value, index) {
+        var dealer =angular.copy( $scope.data.dealers[index]);
         $rootScope.$broadcast("dealerChanged", {
             dealer: dealer
         });
         desking.global.currentuser.dealer = dealer;
-    };
+        $scope.selectedDealer = angular.copy(dealer);
+    }
+    $scope.$on("$select.select", function (scope, value, index) {
+        dealerChange(scope, value, index);
+    });
+    $scope.$on("$typeahead.select", function (scope, value, index) {
+        dealerChange(scope, value, index);
+    });
     $scope.getDealers = function (dealer) {
-        return userService.getDealers(dealer);
+        if (angular.isUndefined(dealer) || dealer.length < this.minLength || angular.isUndefined(desking.global.currentuser.dealer) || dealer == desking.global.currentuser.dealer.DealerID) return;
+        var deferred = $q.defer();
+        userService.getDealers(dealer).then(function (dealers) {
+            $scope.data.dealers = dealers;
+            deferred.resolve(dealers);
+        });
+        return deferred.promise;
     };
     $scope.getMyDealers(desking.global.currentuser.email);
-   
-        //$scope.$watch('desking.global.currentuser.email', function (newvalue, oldvalue) {
-
-        //});
 });
 
 deskingApp.service('userService', function ($http, $q) {

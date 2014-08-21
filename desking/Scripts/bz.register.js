@@ -1,9 +1,11 @@
-﻿function registerCtrl($scope, $http,userService) {
+﻿function registerCtrl($scope, $http, userService) {
+    $scope.minLength = 4;
     $scope.submitData = ["dealer", "userName", "email", "phoneNumber","password"];
     $scope.phoneChecker = function (value) {        
         return null;
     }
     $scope.getDealers = function (dealer) {
+        if (angular.isUndefined(dealer) || dealer.length < this.minLength) return;
         return userService.getDealers(dealer);
     };
     $scope.submit = function () {

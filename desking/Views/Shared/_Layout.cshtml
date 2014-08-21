@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Desk It</title>
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    @*<link rel="stylesheet" href="https://mgcrea.github.io/angular-strap/styles/angular-motion.min.css">
+    <link rel="stylesheet" href="https://mgcrea.github.io/angular-strap/styles/bootstrap-additions.min.css">*@
+
     @*<link rel="stylesheet" href="~/Content/css/bootstrap.css">*@
     @Styles.Render("~/Content/css")
 </head>
@@ -50,22 +53,16 @@
                         @if (User.IsInRole("Support"))
                         {
                             <li>
-                                <input name="dealer" type="text" ng-model="data.dealer" typeahead="dealer.Name for dealer in getDealers($viewValue)" typeahead-min-length="3" typeahead-editable="false" typeahead-on-select="change($item, $model, $label)" class="form-control" autocomplete="off" />                      
+                                <input name="dealer" type="text" ng-model="selectedDealer.DealerID" ng-options="dealer.DealerID as dealer.Name for dealer in getDealers($viewValue)" bs-typeahead data-min-length="{{minLength}}" validation-checker="dealerCheck" validation-check data-animation="am-flip-x" class="form-control" autocomplete="off" />                    
                             </li>
                         }
                         else
                         {
-                            <li class="dropdown" is-open="status.isopen">
-                                <a href="#" class="btn dropdown-toggle">
-                                    <span>{{data.dealer.Name}}</span>
+                            <li>                           
+                                <button type="button" class="btn btn-default" ng-model="selectedDealer.DealerID" ng-options="dealer.DealerID as dealer.Name for dealer in data.dealers" bs-select>
                                     <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li role="presentation" ng-repeat="dealer in data.dealers">
-                                        <a role="menuitem" tabindex="-1" href="#" ng-click="change(dealer)">{{dealer.Name}}</a>
-                                    </li>
-                                </ul>
-                            </li>
+                                </button>
+                            </li>                           
                         }
                             <li>
                                 @*@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*@
