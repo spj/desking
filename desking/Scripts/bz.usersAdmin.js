@@ -10,8 +10,9 @@
     $scope.getusers(desking.global.currentuser.dealer.DealerID);
 }
 
-function userCtrl($scope, $http, userService, $state, uid) {
+function userCtrl($scope, $http, userService, $state,$q, uid) {
     $scope.orig = {};
+    $scope.minLength = 4;
     if (desking.global.roles)
         $scope.roles = desking.global.roles;
     else{
@@ -32,8 +33,17 @@ function userCtrl($scope, $http, userService, $state, uid) {
         });
         $scope.orig = angular.copy($scope.data);
     });
+    $scope.dealerCheck = function (dealer) {
+        return angular.isUndefined(dealer) || _.some($scope.dealers, function (d) { return dealer == d.DealerID; }) ? null : "Invalid dealer";
+    }
     $scope.getDealers = function (dealer) {
-        return userService.getDealers(dealer);
+        if (angular.isUndefined(dealer) || dealer.length < this.minLength ) return;
+        var deferred = $q.defer();
+        userService.getDealers(dealer).then(function (dealers) {
+            $scope.dealers = dealers;
+            deferred.resolve(dealers);
+        });
+        return deferred.promise;
     };
     $scope.rolecheck = function (r) {
         if (r.selected) {
@@ -52,18 +62,18 @@ function userCtrl($scope, $http, userService, $state, uid) {
                 _addedRoles.push(r.Id);
         }
     }
-    $scope.addDealer = function ($item, $model, $label) {
-        if (!_.some($scope.data.dealers,function (d) {
-            return d.dealerID == $item.DealerID;
+    $scope.$on("$typeahead.select", function (scope, value, index) {
+        if (!_.some($scope.data.dealers, function (d) {
+            return d.DealerID == value;
         })) {
-            $scope.data.dealers.push($item);
-            if (_deledDealers.indexOf($item.DealerID)>-1)
-                _deledDealers = _.without(_deledDealers,$item.DealerID);
+            $scope.data.dealers.push($scope.dealers[index]);
+            if (_deledDealers.indexOf(value) > -1)
+                _deledDealers = _.without(_deledDealers, value);
             else
-                _addedDealers.push($item.DealerID);
+                _addedDealers.push(value);
 
         }
-    };
+    });
     $scope.delDealer = function (dealer) {
         $scope.data.dealers = _.reject($scope.data.dealers,function (d) { return d.DealerID == dealer.DealerID; });
         if (_addedDealers.indexOf(dealer.DealerID)>-1)

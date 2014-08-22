@@ -23,8 +23,8 @@ var deskingApp = angular.module('deskingApp', ['ui.router', 'mgcrea.ngStrap', 'u
       .state('register', {
           url: "^/register",
           templateUrl: String.format("{0}{1}/GetView/{2}", desking.global.webroot, 'Account', 'Register'),
-          controller: function ($scope, $http, userService) {
-              registerCtrl.call(this, $scope, $http, userService);
+          controller: function ($scope, $http, userService, $q) {
+              registerCtrl.call(this, $scope, $http, userService, $q);
           }
       })
       .state('login', {
@@ -45,8 +45,8 @@ var deskingApp = angular.module('deskingApp', ['ui.router', 'mgcrea.ngStrap', 'u
     .state('user', {
         url: "/user/:uid",
         templateUrl: String.format("{0}{1}/GetView/{2}", desking.global.webroot, 'UsersAdmin', 'Details'),
-        controller: function ($scope, $http, $stateParams, userService, $state) {
-            userCtrl.call(this, $scope, $http, userService,$state, $stateParams.uid);
+        controller: function ($scope, $http, $stateParams, userService, $state,$q) {
+            userCtrl.call(this, $scope, $http, userService,$state,$q, $stateParams.uid);
         }
     }).
     state('forgetPassword', {
@@ -89,7 +89,7 @@ var deskingApp = angular.module('deskingApp', ['ui.router', 'mgcrea.ngStrap', 'u
         })
     };
     $scope.dealerCheck = function (dealer) {
-        return angular.isUndefined(desking.global.currentuser.dealer) || _.some($scope.data.dealers, function (d) { return dealer == d.DealerID; }) ? null : "Invalid dealer";
+        return angular.isUndefined(dealer) || angular.isUndefined(desking.global.currentuser.dealer) || _.some($scope.data.dealers, function (d) { return dealer == d.DealerID; }) ? null : "Invalid dealer";
     }
     function dealerChange(scope, value, index) {
         var dealer =angular.copy( $scope.data.dealers[index]);

@@ -6,7 +6,7 @@
     <div class="form-group">
         <label class="col-md-2 control-label">Dealer</label>
         <div class="col-md-10">
-            <input name="dealer" type="text" ng-model="data.dealer" ng-options="dealer.DealerID as dealer.Name for dealer in getDealers($viewValue)" bs-typeahead data-min-length="{{minLength}}" data-animation="am-flip-x" class="form-control" autocomplete="off" autofocus required />
+            <input name="dealer" type="text" ng-model="data.dealer" ng-options="dealer.DealerID as dealer.Name for dealer in getDealers($viewValue)" bs-typeahead data-min-length="{{minLength}}" validation-checker="dealerCheck" validation-check data-animation="am-flip-x" class="form-control" autocomplete="off" autofocus required />
         </div>
     </div>
     <div class="form-group">
@@ -24,7 +24,7 @@
     <div class="form-group">
         <label class="col-md-2 control-label">Phone</label>
         <div class="col-md-10">
-            <input name="phone" type="tel" ng-model="data.phoneNumber" class="form-control" required ng-minlength="10" validation-check="invalid phone#" validation-checker="phoneChecker" />
+            <input name="phone" type="tel" ng-model="data.phoneNumber" class="form-control" required ng-minlength="10"/>
         </div>
     </div>
     <div class="form-group">
@@ -41,7 +41,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Register" ng-disabled="registerForm.$invalid && !registerForm.$dirty" />
+            <input type="submit" class="btn btn-default" value="Register" ng-disabled="registerForm.$invalid || !registerForm.$dirty" />
             <input type="reset" class="btn btn-default" value="Reset" ng-click="reset()" ng-disabled="!registerForm.$dirty" />
         </div>
     </div>

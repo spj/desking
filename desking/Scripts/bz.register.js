@@ -1,12 +1,17 @@
-﻿function registerCtrl($scope, $http, userService) {
+﻿function registerCtrl($scope, $http, userService,$q) {
     $scope.minLength = 4;
     $scope.submitData = ["dealer", "userName", "email", "phoneNumber","password"];
-    $scope.phoneChecker = function (value) {        
-        return null;
+    $scope.dealerCheck = function (dealer) {
+        return angular.isUndefined(dealer) || angular.isUndefined($scope.data)|| _.some($scope.data.dealers, function (d) { return dealer == d.DealerID; }) ? null : "Invalid dealer";
     }
     $scope.getDealers = function (dealer) {
         if (angular.isUndefined(dealer) || dealer.length < this.minLength) return;
-        return userService.getDealers(dealer);
+        var deferred = $q.defer();
+        userService.getDealers(dealer).then(function (dealers) {
+            $scope.data.dealers = dealers;
+            deferred.resolve(dealers);
+        });
+        return deferred.promise;
     };
     $scope.submit = function () {
         this.data.password = AESencrypt(this.data.clearPassword);
