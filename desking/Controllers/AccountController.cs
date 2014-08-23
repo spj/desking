@@ -225,7 +225,8 @@ namespace desking.Controllers
         {
             string msg = "Please check your email!";
             var user = await UserManager.FindByNameAsync(email);
-            if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+            //if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+            if(user==null)
             {
                 // Don't reveal that the user does not exist or is not confirmed
                 msg = "user doesn't exist!";

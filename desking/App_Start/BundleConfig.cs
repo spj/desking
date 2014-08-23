@@ -33,8 +33,8 @@ namespace desking
      "~/Scripts/bz.register.js"));
             bundles.Add(new ScriptBundle("~/bundles/desking.usersAdmin").Include(
 "~/Scripts/bz.usersAdmin.js"));
-            bundles.Add(new ScriptBundle("~/bundles/desking.sendVerifyCode").Include(
-      "~/Scripts/bz.sendVerifyCode.js"));
+            bundles.Add(new ScriptBundle("~/bundles/desking.forgetPwd").Include(
+      "~/Scripts/bz.forgetPwd.js"));
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/css/common/*.css"));
             // Set EnableOptimizations to false for debugging. For more information,
