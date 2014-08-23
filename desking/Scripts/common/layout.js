@@ -71,6 +71,12 @@ var deskingApp = angular.module('deskingApp', ['ui.router', 'mgcrea.ngStrap', 'u
 //        });
 //    });
 //})
+.run([
+  '$templateCache',
+  function ($templateCache) {
+      $templateCache.put('popover/confirmation.tpl.html', '<div class="popover" tabindex="-1"><div class="arrow"></div><h3 class="popover-title" ng-bind-html="title" ng-show="title"></h3><div class="popover-content"><button type="button" class="btn" ng-click="$hide()">Cancel</button> <button type="button" class="btn btn-primary" ng-click="popover.del();$hide()">Go Ahead</button></div></div>');
+  }
+])
 .controller("rootCtrl", function ($scope, $alert) {
     $scope.notify = function (config) {
         config = $.extend({type:"info",placement: 'top-right', show:true},config);

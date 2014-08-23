@@ -7,6 +7,7 @@
     $scope.$on("dealerChanged", function (event, args) {
         $scope.getusers(args.dealer.DealerID);
     });
+    $scope.popover = { template: "popover/confirmation.tpl.html", del: function () { console.log("deleted"); } };
     $scope.getusers(desking.global.currentuser.dealer.DealerID);
 }
 
