@@ -31,7 +31,7 @@
              //elm.on("change", function () {
             //    var newvalue = ngModel.$viewValue;
             scope.$watch(attrs.ngModel, function (newvalue) {
-                if (attrs["validationChecker"]) {
+                if (attrs["validationChecker"] && !ngModel.$error.minlength && !ngModel.$error.maxlength && !ngModel.$error.email) {
                     var _err = scope[attrs["validationChecker"]](newvalue);
                     if (_err) {
                         _title = String.format("{0}\n{1}", _title, _err);

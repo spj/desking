@@ -53,13 +53,13 @@
                         @if (User.IsInRole("Support"))
                         {
                             <li>
-                                <input name="dealer" type="text" ng-model="selectedDealer.DealerID" ng-options="dealer.DealerID as dealer.Name for dealer in getDealers($viewValue)" bs-typeahead data-min-length="{{minLength}}" validation-checker="dealerCheck" validation-check data-animation="am-flip-x" class="form-control" autocomplete="off" />                    
+                                <input name="dealer" type="text" ng-model="selectedDealer.Name" ng-options="dealer.Name as dealer.Name for dealer in getDealers($viewValue)" bs-typeahead data-min-length="{{minLength}}" validation-checker="dealerCheck" validation-check data-animation="am-flip-x" class="form-control" autocomplete="off" />                    
                             </li>
                         }
                         else
                         {
                             <li>                           
-                                <button type="button" class="btn btn-default" ng-model="selectedDealer.DealerID" ng-options="dealer.DealerID as dealer.Name for dealer in data.dealers" bs-select>
+                                <button type="button" class="btn btn-default" ng-model="selectedDealer.Name" ng-options="dealer.Name as dealer.Name for dealer in data.dealers" bs-select>
                                     <span class="caret"></span>
                                 </button>
                             </li>                           

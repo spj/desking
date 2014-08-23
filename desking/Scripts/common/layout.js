@@ -89,7 +89,7 @@ var deskingApp = angular.module('deskingApp', ['ui.router', 'mgcrea.ngStrap', 'u
         })
     };
     $scope.dealerCheck = function (dealer) {
-        return angular.isUndefined(dealer) || angular.isUndefined(desking.global.currentuser.dealer) || _.some($scope.data.dealers, function (d) { return dealer == d.DealerID; }) ? null : "Invalid dealer";
+        return angular.isUndefined(dealer) || angular.isUndefined(desking.global.currentuser.dealer) || _.some($scope.data.dealers, function (d) { return dealer == d.Name; }) ? null : "Invalid dealer";
     }
     function dealerChange(scope, value, index) {
         var dealer =angular.copy( $scope.data.dealers[index]);

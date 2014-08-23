@@ -34,7 +34,7 @@ function userCtrl($scope, $http, userService, $state,$q, uid) {
         $scope.orig = angular.copy($scope.data);
     });
     $scope.dealerCheck = function (dealer) {
-        return angular.isUndefined(dealer) || _.some($scope.dealers, function (d) { return dealer == d.DealerID; }) ? null : "Invalid dealer";
+        return angular.isUndefined(dealer) || _.some($scope.dealers, function (d) { return dealer == d.Name; }) ? null : "Invalid dealer";
     }
     $scope.getDealers = function (dealer) {
         if (angular.isUndefined(dealer) || dealer.length < this.minLength ) return;
